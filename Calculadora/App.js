@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, TouchableOpacity, View, Text, codegenNativeCommands} from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 
 function App(){  // inicio para o app ser trabalaho
   return(
