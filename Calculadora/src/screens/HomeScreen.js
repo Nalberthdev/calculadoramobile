@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { View, Pressable, Text, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Display from '../components/Display';
@@ -13,7 +13,7 @@ import {
 } from '../utils/calculadora';
 import { useTema } from '../tema';
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ route, navigation }) {
   const tema = useTema();
   const [expressao, setExpressao] = useState('');
   const [resultado, setResultado] = useState('');
@@ -29,6 +29,20 @@ export default function HomeScreen({ navigation }) {
       carregar().then(setHistorico);
     }, [])
   );
+
+  // Ao tocar numa conta do histórico, o resultado dela volta para o display.
+  // Observa o "toque" (muda a cada vez), e não só o valor, para funcionar
+  // também ao tocar na mesma conta duas vezes.
+  const valorRecebido = route.params?.valor;
+  const toque = route.params?.toque;
+  useEffect(() => {
+    if (valorRecebido === undefined) return;
+    // Reage a um parâmetro vindo de outra tela, por isso o setState no efeito.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setExpressao(valorRecebido);
+    setResultado('');
+    setCalculado(false);
+  }, [valorRecebido, toque]);
 
   // Valor atual: o resultado da conta digitada ou, se ela estiver
   // incompleta, o último resultado.
